@@ -1,7 +1,7 @@
 /**
- * TODO: File Header
- *
- * Author:
+ * This file implements an DictionaryTrie, realizeing a
+ * autocompleter and a wildcard completer.
+ * Author: Kexin Hong, Dingqian Zhao A53319585.
  */
 #include "DictionaryTrie.hpp"
 #include <iostream>

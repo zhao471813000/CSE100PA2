@@ -1,7 +1,7 @@
 /**
  * TODO: File HEADER
  *
- * Author:
+ * Author: Kexin Hong
  */
 
 #include <algorithm>
@@ -25,3 +25,8 @@ TEST(DictTrieTests, EMPTY_TEST) {
 }
 
 /* TODO */
+TEST(DictTrieTests, EMPTY_TEST) {
+    DictionaryTrie dict;
+    ASSERT_EQ(dict.insert("abrakadabra", 10), true);
+    ASSERT_EQ(dict.find("abrakadabra"), true);
+}
