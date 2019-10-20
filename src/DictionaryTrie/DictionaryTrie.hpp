@@ -6,6 +6,7 @@
 #ifndef DICTIONARY_TRIE_HPP
 #define DICTIONARY_TRIE_HPP
 
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -13,6 +14,9 @@
 
 using namespace std;
 
+/* Use priority_queue to sort the word according to freq from top to low.
+ * Priority_queue by default uses less<T> comparator, vector<T> container.*/
+typedef priority_queue<pair<int, string>> my_queue;
 /**
  * The class for a dictionary ADT, implemented as either
  * a mulit-way trie or a ternary search tree.
@@ -20,28 +24,33 @@ using namespace std;
 class DictionaryTrie {
   private:
     // Add private members and helper methods here
+
+    /** The class for a Multi-Way Trie Node, which uses unordered_map
+     * to map from current char to next Trie Node. */
     class TrieNode {
       public:
+        /* Frequency is also used to indicate a word node.
+        Frequency 0 means it is not word node, vice versa. */
         unsigned int frequency;
+
         unordered_map<char, TrieNode*> map;
         /** Initializes a new TrieNode. */
-        TrieNode() : frequency(0) {}
+        TrieNode() : frequency(0), map() {}
 
-        TrieNode(string word, unsigned int freq) : frequency(freq) {}
+        TrieNode(char c, unsigned int freq) : frequency(freq) {
+            map[c] = new TrieNode();
+        }
     };
 
     TrieNode* root;
 
-    void deleteAll(TrieNode* node) {
-        if (node == nullptr) {
-            return;
-        } else {
-            for (pair<char, TrieNode*> element : node->map) {
-                deleteAll(element.second);
-            }
-            node->map.clear();
-        }
-    }
+    /** Helper function for predictCompletions.
+     *  Returns a priority queue of pairs of frequency and word.
+     */
+    my_queue collect(string s, my_queue q, TrieNode* n);
+
+    /** Helper funciton for destructor. */
+    void deleteAll(TrieNode* node);
 
   public:
     /** Initializes a new DictionaryTrie. */
@@ -57,7 +66,9 @@ class DictionaryTrie {
     bool find(string word) const;
 
     /** Return a vector holding up to numCompletions of the most frequent
-     *  completions of prefix, with valid words in the dictionary.  */
+     * completions of prefix, and the completions must be valid words in the
+     * dictionary. These completions should be listed from most to least
+     * frequent. */
     vector<string> predictCompletions(string prefix,
                                       unsigned int numCompletions);
 
