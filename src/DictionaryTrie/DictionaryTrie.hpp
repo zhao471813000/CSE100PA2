@@ -47,10 +47,10 @@ class DictionaryTrie {
     /** Helper function for predictCompletions.
      *  Returns a priority queue of pairs of frequency and word.
      */
-    void collect(string s, my_queue& q, TrieNode* n);
+    static void collect(string s, my_queue& q, TrieNode* n);
 
     /** Helper funciton for destructor. */
-    void deleteAll(TrieNode* node);
+    static void deleteAll(TrieNode* node);
 
   public:
     /** Initializes a new DictionaryTrie. */

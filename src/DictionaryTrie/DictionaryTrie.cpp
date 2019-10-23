@@ -75,7 +75,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
         }
         curr = curr->map[prefix[i]];
     }  // curr points to prefix node
-    priority_queue<pair<int, string>> wordQueue;
+    my_queue wordQueue;
     collect(prefix, wordQueue, curr);
     vector<string> vec;
     unsigned int numWord = wordQueue.size();

@@ -1,5 +1,5 @@
-/*
- * TODO: File Header
+/* User interaction program.
+ * Kexin Hong A53311871, Dingqian Zhao A53319585.
  */
 #include <fstream>
 #include <iostream>
@@ -73,7 +73,10 @@ int main(int argc, char** argv) {
         cout << "Enter a number of completions:" << endl;
         cin >> numberOfCompletions;
 
-        // TODO
+        vector<string> vec = dt->predictCompletions(word, numberOfCompletions);
+        for (string s : vec) {
+            cout << s << endl;
+        }
 
         cout << "Continue? (y/n)" << endl;
         cin >> cont;
