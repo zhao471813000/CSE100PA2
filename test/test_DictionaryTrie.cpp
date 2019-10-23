@@ -40,19 +40,13 @@ TEST(DictTrieTests, PREDICT_COMPLETIONS_TEST) {
     vector<string> returnVec = dict.predictCompletions("ap", 10);
     ASSERT_EQ(returnVec, vec1);
 }
-TEST(DictTrieTests, MORE_TEST) {
+TEST(DictTrieTests, MORE_DATA_TEST) {
     DictionaryTrie dict;
-    ASSERT_EQ(dict.insert("annie", 2), true);
-    ASSERT_EQ(dict.insert("get", 4), true);
-    ASSERT_EQ(dict.insert("an", 6), true);
-    ASSERT_EQ(dict.insert("apple", 10), true);
-    ASSERT_EQ(dict.insert("and", 15), true);
-    ASSERT_EQ(dict.insert("ann", 20), true);
-    ASSERT_EQ(dict.insert("sleep", 1), true);
-    ASSERT_EQ(dict.insert("in", 1), true);
-    ASSERT_EQ(dict.insert("attic", 1), true);
-    vector<string> vec1 = {"ann", "and", "an", "annie"};
-    vector<string> vec2 = {"ann", "and"};
-    ASSERT_EQ(dict.predictCompletions("an", 10), vec1);
-    ASSERT_EQ(dict.predictCompletions("an", 2), vec2);
+    ifstream in;
+    in.open("unique_freq_dict.txt", ios::binary);
+    ASSERT_TRUE(in.is_open());
+    in.seekg(0, ios_base::end);
+    unsigned int len = in.tellg();
+    ASSERT_NE(len, 0);
+    Utils::loadDict(dict, in);
 }

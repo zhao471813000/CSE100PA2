@@ -1,0 +1,9 @@
+Reading file: data/freq_dict.txt
+Enter a prefix/pattern to search for:
+Enter a number of completions:
+catch
+category
+cat
+cats
+catholic
+Continue? (y/n)
