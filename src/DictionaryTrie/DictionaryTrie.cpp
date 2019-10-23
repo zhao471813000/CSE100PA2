@@ -112,10 +112,9 @@ DictionaryTrie::~DictionaryTrie() { deleteAll(root); }
 void DictionaryTrie::deleteAll(TrieNode* node) {
     if (node == nullptr) {
         return;
-    } else {
-        for (pair<char, TrieNode*> element : node->map) {
-            deleteAll(element.second);
-        }
-        node->map.clear();
     }
+    for (pair<char, TrieNode*> element : node->map) {
+        deleteAll(element.second);
+    }
+    delete node;
 }

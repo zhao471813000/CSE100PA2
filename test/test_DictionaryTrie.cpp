@@ -44,13 +44,35 @@ TEST(DictTrieTests, PREDICT_COMPLETIONS_TEST) {
     ASSERT_EQ(returnVec, vec1);
 }
 
-// TEST(DictTrieTests, MORE_DATA_TEST) {
-//     DictionaryTrie dict;
-//     ifstream in;
-//     in.open("unique_freq_dict.txt", ios::binary);
-//     ASSERT_TRUE(in.is_open());
-//     in.seekg(0, ios_base::end);
-//     unsigned int len = in.tellg();
-//     ASSERT_NE(len, 0);
-//     Utils::loadDict(dict, in);
-// }
+TEST(DictTrieTests, MORE_TEST) {
+    DictionaryTrie dict;
+    ASSERT_EQ(dict.insert("vice versa", 2), true);
+    ASSERT_EQ(dict.insert("vice president", 3), true);
+    ASSERT_EQ(dict.insert("vice admiral", 4), true);
+    ASSERT_EQ(dict.insert("vice", 5), true);
+
+    vector<string> vec1 = {"vice", "vice admiral", "vice president"};
+    vector<string> returnVec1 = dict.predictCompletions("vice", 3);
+    ASSERT_EQ(returnVec1, vec1);
+
+    vector<string> vec2 = {"vice admiral", "vice president", "vice versa"};
+    vector<string> returnVec2 = dict.predictCompletions("vice ", 3);
+    ASSERT_EQ(returnVec2, vec2);
+
+    vector<string> vec3 = {"vice admiral"};
+    vector<string> returnVec3 = dict.predictCompletions("vice a", 3);
+    ASSERT_EQ(returnVec3, vec3);
+
+    vector<string> vec4 = {};
+    vector<string> returnVec4 = dict.predictCompletions("apple", 3);
+    ASSERT_EQ(returnVec4, vec4);
+
+    ASSERT_EQ(dict.insert("('_')", 10), true);
+    ASSERT_EQ(dict.insert(":)", 12), true);
+    ASSERT_EQ(dict.insert("(o^^o)", 14), true);
+    ASSERT_EQ(dict.insert("(^_^)", 15), true);
+
+    vector<string> vec5 = {"(^_^)", "(o^^o)", "('_')"};
+    vector<string> returnVec5 = dict.predictCompletions("(", 3);
+    ASSERT_EQ(returnVec5, vec5);
+}
