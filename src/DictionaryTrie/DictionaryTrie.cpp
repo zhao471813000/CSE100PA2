@@ -1,7 +1,7 @@
 /**
  * This file implements an DictionaryTrie, realizing a
  * autocompleter and a wildcard completer.
- * Author: Kexin Hong, Dingqian Zhao A53319585.
+ * Author: Kexin Hong A53311871, Dingqian Zhao A53319585.
  */
 #include "DictionaryTrie.hpp"
 #include <algorithm>
@@ -26,7 +26,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
     }
     TrieNode* curr = root;
     for (int i = 0; i < word.length(); i++) {
-        if (curr->map.empty() | curr->map.find(word[i]) == curr->map.end()) {
+        if (curr->map.find(word[i]) == curr->map.end()) {
             // current char has not been inserted into trie node yet.
             curr->map[word[i]] = new TrieNode();
         }  // let curr point to the next node
@@ -76,7 +76,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
         curr = curr->map[prefix[i]];
     }  // curr points to prefix node
     priority_queue<pair<int, string>> wordQueue;
-    wordQueue = collect(prefix, wordQueue, curr);
+    collect(prefix, wordQueue, curr);
     vector<string> vec;
     unsigned int numWord = wordQueue.size();
     for (int i = 0; i < min(numCompletions, numWord); i++) {
@@ -90,14 +90,13 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 /** Helper function for predictCompletions.
  *  Returns a priority queue of pairs of frequency and word.
  */
-my_queue DictionaryTrie::collect(string s, my_queue q, TrieNode* n) {
+void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
     if (n->frequency != 0) {
         q.push(make_pair(n->frequency, s));
     }
     for (pair<char, TrieNode*> element : n->map) {
         collect(s + element.first, q, element.second);
     }
-    return q;
 }
 
 /* TODO */
