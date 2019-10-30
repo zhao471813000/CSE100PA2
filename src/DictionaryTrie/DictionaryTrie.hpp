@@ -20,7 +20,7 @@ struct MyComparator {
         if (p1.first != p2.first) {
             return p1.first < p2.first;
         } else {
-            p1.second < p2.second;
+            return (p1.second.compare(p2.second) > 0);
         }
     }
 };
