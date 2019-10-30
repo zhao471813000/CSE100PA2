@@ -72,7 +72,7 @@ bool DictionaryTrie::find(string word) const {
  */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    if (root == nullptr || prefix.empty() || numCompletions <= 0) {
+    if ((numCompletions == 0) || root == nullptr || prefix.empty()) {
         return {};
     }
     TrieNode* curr = root;
@@ -93,6 +93,7 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
 void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
     if (n == nullptr) return;
     if (n->frequency != 0) {
+        // if (q.size()) {}
         q.push(make_pair(n->frequency, s));
     }
     for (pair<char, TrieNode*> element : n->map) {
@@ -104,9 +105,9 @@ void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
 
 /** Return a vector of strings with top N frequency from PQ.
  */
-vector<string> DictionaryTrie::topNFreq(my_queue& q, unsigned int n) {
+vector<string> DictionaryTrie::topNFreq(my_queue& q, int n) {
     vector<string> vec;
-    unsigned int numWord = q.size();
+    int numWord = q.size();
     for (int i = 0; i < min(n, numWord); i++) {
         pair<int, string> p = q.top();
         q.pop();
@@ -121,7 +122,7 @@ vector<string> DictionaryTrie::topNFreq(my_queue& q, unsigned int n) {
  */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
-    if (root == nullptr || numCompletions <= 0 || pattern.empty()) {
+    if ((numCompletions == 0) || root == nullptr || pattern.empty()) {
         return {};
     }
     my_queue wordQueue;

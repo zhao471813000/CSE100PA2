@@ -102,3 +102,14 @@ TEST(DictTrieTests, PREDICTUNDERSCORES1_TEST) {
                                  "apvds", "apdxz", "apefd"};
     ASSERT_EQ(returnvec7, vec7);
 }
+
+TEST(DictTrieTests, SAME_FREQ_TEST) {
+    DictionaryTrie dict;
+    dict.insert("a", 2);
+    dict.insert("absolute", 2);
+    dict.insert("acne", 2);
+    dict.insert("best", 2);
+    vector<string> vec = dict.predictCompletions("a", 6);
+    vector<string> returnvec = {"a", "absolute", "ance"};
+    ASSERT_EQ(returnvec, vec);
+}

@@ -16,7 +16,35 @@ using namespace std;
 
 /* Use priority_queue to sort the word according to freq from top to low.
  * Priority_queue by default uses less<T> comparator, vector<T> container.*/
-typedef priority_queue<pair<int, string>> my_queue;
+// struct MyPair {
+//     int freq;
+//     string str;
+
+//     MyPair(int freq, string str) : freq(freq), str(str) {}
+// };
+
+// implements the operator overlading
+// struct MyComparator {
+//     bool operator()(MyPair const& p1, MyPair const& p2) {
+//         if (p1.freq != p2.freq) {
+//             return p1.freq < p2.freq;
+//         } else {
+//             p1.str < p2.str;
+//         }
+//     }
+// };
+struct MyComparator {
+    bool operator()(my_pair const& p1, my_pair const& p2) {
+        if (p1.first!= p2.first) {
+            return p1.first< p2.first;
+        } else {
+            p1.second < p2.second;
+        }
+    }
+};
+
+typedef pair<int, string> my_pair;
+typedef priority_queue<my_pair, vector<my_pair>, MyComparator > my_queue;
 /**
  * The class for a dictionary ADT, implemented as either
  * a mulit-way trie or a ternary search tree.
@@ -55,7 +83,7 @@ class DictionaryTrie {
     void collectUnderscore(TrieNode* n, string s, string pattern, my_queue& q);
 
     /** Return a vector of strings with top N frequency from PQ. */
-    vector<string> topNFreq(my_queue& q, unsigned int n);
+    vector<string> topNFreq(my_queue& q, int n);
     /** Helper funciton for destructor. */
 
     void deleteAll(TrieNode* node);
