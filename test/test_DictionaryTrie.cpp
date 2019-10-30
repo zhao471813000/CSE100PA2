@@ -105,12 +105,13 @@ TEST(DictTrieTests, PREDICTUNDERSCORES1_TEST) {
 
 TEST(DictTrieTests, SAME_FREQ_TEST) {
     DictionaryTrie dict;
+    dict.insert("a", 1);
     dict.insert("ab", 2);
     dict.insert("abnormal", 2);
     dict.insert("absolute", 2);
     dict.insert("acne", 2);
     dict.insert("best", 2);
     vector<string> vec = dict.predictCompletions("a", 6);
-    vector<string> returnvec = {"ab", "abnormal", "absolute", "acne"};
+    vector<string> returnvec = {"a","ab", "abnormal", "absolute", "acne"};
     ASSERT_EQ(returnvec, vec);
 }
