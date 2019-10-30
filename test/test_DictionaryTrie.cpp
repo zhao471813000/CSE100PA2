@@ -47,9 +47,9 @@ TEST(DictTrieTests, PREDICT_COMPLETIONS_TEST) {
 TEST(DictTrieTests, MORE_TEST) {
     DictionaryTrie dict;
     ASSERT_EQ(dict.insert("vice versa", 2), true);
-    ASSERT_EQ(dict.insert("vice president", 3), true);
+    ASSERT_EQ(dict.insert("vice president", 4), true);
     ASSERT_EQ(dict.insert("vice admiral", 4), true);
-    ASSERT_EQ(dict.insert("vice", 5), true);
+    ASSERT_EQ(dict.insert("vice", 1), true);
 
     vector<string> vec1 = {"vice", "vice admiral", "vice president"};
     vector<string> returnVec1 = dict.predictCompletions("vice", 3);
@@ -66,15 +66,6 @@ TEST(DictTrieTests, MORE_TEST) {
     vector<string> vec4 = {};
     vector<string> returnVec4 = dict.predictCompletions("apple", 3);
     ASSERT_EQ(returnVec4, vec4);
-
-    ASSERT_EQ(dict.insert("('_')", 10), true);
-    ASSERT_EQ(dict.insert(":)", 12), true);
-    ASSERT_EQ(dict.insert("(o^^o)", 14), true);
-    ASSERT_EQ(dict.insert("(^_^)", 15), true);
-
-    vector<string> vec5 = {"(^_^)", "(o^^o)", "('_')"};
-    vector<string> returnVec5 = dict.predictCompletions("(", 3);
-    ASSERT_EQ(returnVec5, vec5);
 }
 TEST(DictTrieTests, PREDICTUNDERSCORES1_TEST) {
     DictionaryTrie dict;
@@ -105,12 +96,13 @@ TEST(DictTrieTests, PREDICTUNDERSCORES1_TEST) {
 
 TEST(DictTrieTests, SAME_FREQ_TEST) {
     DictionaryTrie dict;
+    dict.insert("a", 1);
     dict.insert("ab", 2);
     dict.insert("abnormal", 2);
     dict.insert("absolute", 2);
     dict.insert("acne", 2);
     dict.insert("best", 2);
     vector<string> vec = dict.predictCompletions("a", 6);
-    vector<string> returnvec = {"ab", "abnormal", "absolute", "acne"};
+    vector<string> returnvec = {"a", "ab", "abnormal", "absolute", "acne"};
     ASSERT_EQ(returnvec, vec);
 }

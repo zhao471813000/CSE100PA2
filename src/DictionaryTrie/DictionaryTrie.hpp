@@ -15,40 +15,27 @@
 
 using namespace std;
 
+/** Define a MyComparator to allow for two priorities of the priority queue.
+ *  During optimization, change the underlying PQ to a min-PQ to keep the PQ a
+ *  fixed size later in predictions.
+ */
 struct MyComparator {
-    bool operator()(pair<int, string> const& p1, pair<int, string> const& p2) {
+    bool operator()(pair<unsigned int, string> const& p1,
+                    pair<unsigned int, string> const& p2) const {
         if (p1.first != p2.first) {
-            return p1.first < p2.first;
+            return p1.first > p2.first;
         } else {
-            return (p1.second.compare(p2.second) > 0);
+            return p1.second < p2.second;
         }
     }
 };
-// typedef pair<int, string> my_pair;
-// typedef priority_queue<my_pair, vector<my_pair>, MyComparator> my_queue;
-typedef priority_queue<pair<int, string>, vector<pair<int, string> >,
-                       MyComparator>
+
+/** The PQ uses a Comparator first compare the pair's first element--frequency;
+ *  if frequency is equal, then compare the second element (alphabetical order)
+ */
+typedef priority_queue<pair<unsigned int, string>,
+                       vector<pair<unsigned int, string> >, MyComparator>
     my_queue;
-
-/* Use priority_queue to sort the word according to freq from top to low.
- * Priority_queue by default uses less<T> comparator, vector<T> container.*/
-// struct MyPair {
-//     int freq;
-//     string str;
-
-//     MyPair(int freq, string str) : freq(freq), str(str) {}
-// };
-
-// implements the operator overlading
-// struct MyComparator {
-//     bool operator()(MyPair const& p1, MyPair const& p2) {
-//         if (p1.freq != p2.freq) {
-//             return p1.freq < p2.freq;
-//         } else {
-//             p1.str < p2.str;
-//         }
-//     }
-// };
 
 /**
  * The class for a dictionary ADT, implemented as either
@@ -56,8 +43,6 @@ typedef priority_queue<pair<int, string>, vector<pair<int, string> >,
  */
 class DictionaryTrie {
   private:
-    // Add private members and helper methods here
-
     /** The class for a Multi-Way Trie Node, which uses unordered_map
      * to map from current char to next Trie Node. */
     class TrieNode {
@@ -80,17 +65,17 @@ class DictionaryTrie {
     /** Helper function for predictCompletions.
      *  Returns a priority queue of pairs of frequency and word.
      */
-    void collect(string s, my_queue& q, TrieNode* n, string prefix);
+    void collect(string s, my_queue& q, TrieNode* node, string prefix, int num);
 
     /** Helper function for predictUnderscores.
      *  Returns a priority queue of pairs of frequency and word.
      */
     void collectUnderscore(TrieNode* n, string s, string pattern, my_queue& q);
 
-    /** Return a vector of strings with top N frequency from PQ. */
-    vector<string> topNFreq(my_queue& q, int n);
-    /** Helper funciton for destructor. */
+    /** Return a vector of strings from PQ. */
+    vector<string> popVector(my_queue& q, int num);
 
+    /** Helper funciton for destructor. */
     void deleteAll(TrieNode* node);
 
   public:

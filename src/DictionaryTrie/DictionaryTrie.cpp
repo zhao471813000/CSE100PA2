@@ -72,7 +72,7 @@ bool DictionaryTrie::find(string word) const {
  */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    if ((numCompletions == 0) || root == nullptr || prefix.empty()) {
+    if (numCompletions == 0 || root == nullptr || prefix.empty()) {
         return {};
     }
     TrieNode* curr = root;
@@ -82,43 +82,51 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
         }
         curr = curr->map[prefix[i]];
     }  // curr points to prefix node
+
     my_queue wordQueue;
 
-    collect(prefix, wordQueue, curr, prefix);
-    return topNFreq(wordQueue, numCompletions);
+    collect(prefix, wordQueue, curr, prefix, numCompletions);
+    return popVector(wordQueue, numCompletions);
 }
 
 /** Helper function for predictCompletions.
  *  Returns a priority queue of pairs of frequency and word.
  */
-void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n,
-                             string prefix) {
-    if (n == nullptr) return;
-    if (n->frequency != 0) {
-        // if (q.size()) {}
-        if (s == prefix) {
-            q.push(make_pair(numeric_limits<int>::max(), s));
+void DictionaryTrie::collect(string s, my_queue& q, TrieNode* node,
+                             string prefix, int num) {
+    if (node == nullptr) return;
+    if (node->frequency != 0) {
+        if (q.size() < num) {
+            if (s == prefix) {
+                q.push(make_pair(numeric_limits<unsigned int>::max(), s));
+            } else {
+                q.push(make_pair(node->frequency, s));
+            }
         } else {
-            q.push(make_pair(n->frequency, s));
+            if (q.top().first < node->frequency) {
+                q.pop();
+                q.push(make_pair(node->frequency, s));
+            }
         }
     }
-    for (pair<char, TrieNode*> element : n->map) {
+    for (pair<char, TrieNode*> element : node->map) {
         s.push_back(element.first);
-        collect(s, q, element.second, prefix);
+        collect(s, q, element.second, prefix, num);
         s.pop_back();
     }
 }
 
-/** Return a vector of strings with top N frequency from PQ.
+/** Return a vector of strings from PQ.
  */
-vector<string> DictionaryTrie::topNFreq(my_queue& q, int n) {
+vector<string> DictionaryTrie::popVector(my_queue& q, int num) {
     vector<string> vec;
     int numWord = q.size();
-    for (int i = 0; i < min(n, numWord); i++) {
+    for (int i = 0; i < min(num, numWord); i++) {
         pair<int, string> p = q.top();
         q.pop();
         vec.push_back(p.second);
     }
+    reverse(vec.begin(), vec.end());
     return vec;
 }
 
@@ -134,7 +142,7 @@ std::vector<string> DictionaryTrie::predictUnderscores(
     my_queue wordQueue;
     string s = "";
     collectUnderscore(root, s, pattern, wordQueue);
-    return topNFreq(wordQueue, numCompletions);
+    return popVector(wordQueue, numCompletions);
 }
 
 /** Helper function for predictUnderscores.
