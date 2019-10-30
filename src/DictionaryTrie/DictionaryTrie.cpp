@@ -1,6 +1,13 @@
 /**
- * This file implements an DictionaryTrie, realizing a
- * autocompleter and a wildcard completer.
+ * This file implements an DictionaryTrie, realizing a autocompleter and a
+ * wildcard completer. Priority queue is used in this PA to store the words with
+ * frequencies.
+ * @source: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne
+ * @source: Discussion slides of CSE100.
+ * The source of the algorithm of the wildcard prediction is from the slides of
+ * discussion of CSE100 at UCSD, and the textbook Algorithms, 4th Edition by
+ * Robert Sedgewick and Kevin Wayne.
+ *
  * Author: Kexin Hong A53311871, Dingqian Zhao A53319585.
  */
 #include "DictionaryTrie.hpp"
@@ -89,7 +96,9 @@ void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
         q.push(make_pair(n->frequency, s));
     }
     for (pair<char, TrieNode*> element : n->map) {
-        collect(s + element.first, q, element.second);
+        s.push_back(element.first);
+        collect(s, q, element.second);
+        s.pop_back();
     }
 }
 
