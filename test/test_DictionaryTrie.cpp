@@ -105,4 +105,8 @@ TEST(DictTrieTests, SAME_FREQ_TEST) {
     vector<string> vec = dict.predictCompletions("a", 6);
     vector<string> returnvec = {"a", "ab", "abnormal", "absolute", "acne"};
     ASSERT_EQ(returnvec, vec);
+
+    vector<string> vec1 = dict.predictUnderscores("ab______", 6);
+    vector<string> returnvec1 = {"abnormal", "absolute"};
+    ASSERT_EQ(returnvec1, vec1);
 }

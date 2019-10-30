@@ -30,13 +30,26 @@ struct MyComparator {
     }
 };
 
+struct MyComparatorMax {
+    bool operator()(pair<unsigned int, string> const& p1,
+                    pair<unsigned int, string> const& p2) const {
+        if (p1.first != p2.first) {
+            return p1.first < p2.first;
+        } else {
+            return p1.second > p2.second;
+        }
+    }
+};
+
 /** The PQ uses a Comparator first compare the pair's first element--frequency;
  *  if frequency is equal, then compare the second element (alphabetical order)
  */
 typedef priority_queue<pair<unsigned int, string>,
                        vector<pair<unsigned int, string> >, MyComparator>
-    my_queue;
-
+    my_min_queue;
+typedef priority_queue<pair<unsigned int, string>,
+                       vector<pair<unsigned int, string> >, MyComparatorMax>
+    my_max_queue;
 /**
  * The class for a dictionary ADT, implemented as either
  * a mulit-way trie or a ternary search tree.
@@ -65,15 +78,19 @@ class DictionaryTrie {
     /** Helper function for predictCompletions.
      *  Returns a priority queue of pairs of frequency and word.
      */
-    void collect(string s, my_queue& q, TrieNode* node, string prefix, int num);
+    void collect(string s, my_min_queue& q, TrieNode* node, string prefix,
+                 int num);
 
     /** Helper function for predictUnderscores.
      *  Returns a priority queue of pairs of frequency and word.
      */
-    void collectUnderscore(TrieNode* n, string s, string pattern, my_queue& q);
+    void collectUnderscore(TrieNode* n, string s, string pattern,
+                           my_max_queue& q);
 
     /** Return a vector of strings from PQ. */
-    vector<string> popVector(my_queue& q, int num);
+    vector<string> popVectorReverse(my_min_queue& q, int num);
+
+    vector<string> popVector(my_max_queue& q, int num);
 
     /** Helper funciton for destructor. */
     void deleteAll(TrieNode* node);

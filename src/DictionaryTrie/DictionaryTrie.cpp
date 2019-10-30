@@ -83,16 +83,16 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
         curr = curr->map[prefix[i]];
     }  // curr points to prefix node
 
-    my_queue wordQueue;
+    my_min_queue wordQueue;
 
     collect(prefix, wordQueue, curr, prefix, numCompletions);
-    return popVector(wordQueue, numCompletions);
+    return popVectorReverse(wordQueue, numCompletions);
 }
 
 /** Helper function for predictCompletions.
  *  Returns a priority queue of pairs of frequency and word.
  */
-void DictionaryTrie::collect(string s, my_queue& q, TrieNode* node,
+void DictionaryTrie::collect(string s, my_min_queue& q, TrieNode* node,
                              string prefix, int num) {
     if (node == nullptr) return;
     if (node->frequency != 0) {
@@ -118,7 +118,18 @@ void DictionaryTrie::collect(string s, my_queue& q, TrieNode* node,
 
 /** Return a vector of strings from PQ.
  */
-vector<string> DictionaryTrie::popVector(my_queue& q, int num) {
+vector<string> DictionaryTrie::popVector(my_max_queue& q, int num) {
+    vector<string> vec;
+    int numWord = q.size();
+    for (int i = 0; i < min(num, numWord); i++) {
+        pair<int, string> p = q.top();
+        q.pop();
+        vec.push_back(p.second);
+    }
+    return vec;
+}
+
+vector<string> DictionaryTrie::popVectorReverse(my_min_queue& q, int num) {
     vector<string> vec;
     int numWord = q.size();
     for (int i = 0; i < min(num, numWord); i++) {
@@ -139,7 +150,7 @@ std::vector<string> DictionaryTrie::predictUnderscores(
     if ((numCompletions == 0) || root == nullptr || pattern.empty()) {
         return {};
     }
-    my_queue wordQueue;
+    my_max_queue wordQueue;
     string s = "";
     collectUnderscore(root, s, pattern, wordQueue);
     return popVector(wordQueue, numCompletions);
@@ -150,7 +161,7 @@ std::vector<string> DictionaryTrie::predictUnderscores(
  *  backtracking.
  */
 void DictionaryTrie::collectUnderscore(TrieNode* n, string s, string pattern,
-                                       my_queue& q) {
+                                       my_max_queue& q) {
     if (n == nullptr) return;
 
     if (s.length() == pattern.length()) {
