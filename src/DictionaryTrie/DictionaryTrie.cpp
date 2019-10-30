@@ -50,7 +50,7 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
 /** Return true if the words in the DictionaryTrie and
  *  false otherwise. */
 bool DictionaryTrie::find(string word) const {
-    if (word.empty() | root == nullptr) {
+    if (word.empty() || root == nullptr) {
         return false;
     }
     TrieNode* curr = root;
@@ -72,7 +72,7 @@ bool DictionaryTrie::find(string word) const {
  */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    if (root == nullptr || prefix.empty() || numCompletions == 0) {
+    if (root == nullptr || prefix.empty() || numCompletions <= 0) {
         return {};
     }
     TrieNode* curr = root;
@@ -121,7 +121,7 @@ vector<string> DictionaryTrie::topNFreq(my_queue& q, unsigned int n) {
  */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
-    if (root == nullptr || numCompletions == 0 || pattern.empty()) {
+    if (root == nullptr || numCompletions <= 0 || pattern.empty()) {
         return {};
     }
     my_queue wordQueue;
