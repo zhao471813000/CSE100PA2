@@ -49,7 +49,15 @@ class DictionaryTrie {
      */
     void collect(string s, my_queue& q, TrieNode* n);
 
+    /** Helper function for predictUnderscores.
+     *  Returns a priority queue of pairs of frequency and word.
+     */
+    void collectUnderscore(TrieNode* n, string s, string pattern, my_queue& q);
+
+    /** Return a vector of strings with top N frequency from PQ. */
+    vector<string> topNFreq(my_queue& q, unsigned int n);
     /** Helper funciton for destructor. */
+
     void deleteAll(TrieNode* node);
 
   public:

@@ -65,7 +65,7 @@ bool DictionaryTrie::find(string word) const {
  */
 vector<string> DictionaryTrie::predictCompletions(string prefix,
                                                   unsigned int numCompletions) {
-    if (root == nullptr | prefix.empty() | numCompletions == 0) {
+    if (root == nullptr || prefix.empty() || numCompletions == 0) {
         return {};
     }
     TrieNode* curr = root;
@@ -77,20 +77,14 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
     }  // curr points to prefix node
     my_queue wordQueue;
     collect(prefix, wordQueue, curr);
-    vector<string> vec;
-    unsigned int numWord = wordQueue.size();
-    for (int i = 0; i < min(numCompletions, numWord); i++) {
-        pair<int, string> p = wordQueue.top();
-        wordQueue.pop();
-        vec.push_back(p.second);
-    }
-    return vec;
+    return topNFreq(wordQueue, numCompletions);
 }
 
 /** Helper function for predictCompletions.
  *  Returns a priority queue of pairs of frequency and word.
  */
 void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
+    if (n == nullptr) return;
     if (n->frequency != 0) {
         q.push(make_pair(n->frequency, s));
     }
@@ -99,10 +93,61 @@ void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
     }
 }
 
-/* TODO */
+/** Return a vector of strings with top N frequency from PQ.
+ */
+vector<string> DictionaryTrie::topNFreq(my_queue& q, unsigned int n) {
+    vector<string> vec;
+    unsigned int numWord = q.size();
+    for (int i = 0; i < min(n, numWord); i++) {
+        pair<int, string> p = q.top();
+        q.pop();
+        vec.push_back(p.second);
+    }
+    return vec;
+}
+
+/** Allow multiple wildcard prediction in your autocompleter.
+ *  Return a vector holding up to numCompletions of the most frequent valid
+ *  completions of pattern.
+ */
 std::vector<string> DictionaryTrie::predictUnderscores(
     string pattern, unsigned int numCompletions) {
-    return {};
+    if (root == nullptr || numCompletions == 0 || pattern.empty()) {
+        return {};
+    }
+    my_queue wordQueue;
+    string s = "";
+    collectUnderscore(root, s, pattern, wordQueue);
+    return topNFreq(wordQueue, numCompletions);
+}
+
+/** Helper function for predictUnderscores.
+ *  Recursively add the string that satisfy the pattern to the PQ with
+ *  backtracking.
+ */
+void DictionaryTrie::collectUnderscore(TrieNode* n, string s, string pattern,
+                                       my_queue& q) {
+    if (n == nullptr) return;
+
+    if (s.length() == pattern.length()) {
+        if (n->frequency != 0) {
+            q.push(make_pair(n->frequency, s));
+        } else {
+            return;
+        }
+    }
+    char c = pattern[s.length()];
+    if (c == '_') {
+        for (pair<char, TrieNode*> element : n->map) {
+            s.push_back(element.first);
+            collectUnderscore(element.second, s, pattern, q);
+            s.pop_back();
+        }
+    } else {
+        s.push_back(c);
+        collectUnderscore(n->map[c], s, pattern, q);
+        s.pop_back();
+    }
 }
 
 /** Destructor to avoid memory leaks. */

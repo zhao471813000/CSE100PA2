@@ -72,8 +72,18 @@ int main(int argc, char** argv) {
         getline(cin, word);
         cout << "Enter a number of completions:" << endl;
         cin >> numberOfCompletions;
-
-        vector<string> vec = dt->predictCompletions(word, numberOfCompletions);
+        bool underscore = false;
+        for (char c : word) {
+            if (c == '_') {
+                underscore = true;
+            }
+        }
+        vector<string> vec;
+        if (underscore) {
+            vec = dt->predictUnderscores(word, numberOfCompletions);
+        } else {
+            vec = dt->predictCompletions(word, numberOfCompletions);
+        }
         for (string s : vec) {
             cout << s << endl;
         }

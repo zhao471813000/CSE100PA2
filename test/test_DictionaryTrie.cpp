@@ -76,3 +76,29 @@ TEST(DictTrieTests, MORE_TEST) {
     vector<string> returnVec5 = dict.predictCompletions("(", 3);
     ASSERT_EQ(returnVec5, vec5);
 }
+TEST(DictTrieTests, PREDICTUNDERSCORES1_TEST) {
+    DictionaryTrie dict;
+    vector<string> vecempty = {};
+    ASSERT_EQ(dict.predictUnderscores("ap_", 6), vecempty);
+    dict.insert("app", 2);
+    dict.insert("apb", 3);
+    dict.insert("apc", 34);
+    dict.insert("apg", 1);
+    dict.insert("apf", 9);
+    dict.insert("apr", 7);
+
+    dict.insert("apefd", 4);
+    dict.insert("apdxz", 6);
+    dict.insert("apvds", 10);
+    dict.insert("apsxf", 26);
+    dict.insert("apxdf", 30);
+    dict.insert("apubj", 76);
+    ASSERT_EQ(dict.predictUnderscores("", 6), vecempty);
+    vector<string> vec6 = dict.predictUnderscores("ap_", 6);
+    vector<string> returnvec6 = {"apc", "apf", "apr", "apb", "app", "apg"};
+    ASSERT_EQ(returnvec6, vec6);
+    vector<string> vec7 = dict.predictUnderscores("_p___", 6);
+    vector<string> returnvec7 = {"apubj", "apxdf", "apsxf",
+                                 "apvds", "apdxz", "apefd"};
+    ASSERT_EQ(returnvec7, vec7);
+}
