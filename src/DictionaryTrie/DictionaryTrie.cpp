@@ -83,22 +83,28 @@ vector<string> DictionaryTrie::predictCompletions(string prefix,
         curr = curr->map[prefix[i]];
     }  // curr points to prefix node
     my_queue wordQueue;
-    collect(prefix, wordQueue, curr);
+
+    collect(prefix, wordQueue, curr, prefix);
     return topNFreq(wordQueue, numCompletions);
 }
 
 /** Helper function for predictCompletions.
  *  Returns a priority queue of pairs of frequency and word.
  */
-void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n) {
+void DictionaryTrie::collect(string s, my_queue& q, TrieNode* n,
+                             string prefix) {
     if (n == nullptr) return;
     if (n->frequency != 0) {
         // if (q.size()) {}
-        q.push(make_pair(n->frequency, s));
+        if (s == prefix) {
+            q.push(make_pair(numeric_limits<int>::max(), s));
+        } else {
+            q.push(make_pair(n->frequency, s));
+        }
     }
     for (pair<char, TrieNode*> element : n->map) {
         s.push_back(element.first);
-        collect(s, q, element.second);
+        collect(s, q, element.second, prefix);
         s.pop_back();
     }
 }

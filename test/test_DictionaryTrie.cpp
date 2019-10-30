@@ -110,6 +110,6 @@ TEST(DictTrieTests, SAME_FREQ_TEST) {
     dict.insert("acne", 2);
     dict.insert("best", 2);
     vector<string> vec = dict.predictCompletions("a", 6);
-    vector<string> returnvec = {"a", "absolute", "ance"};
+    vector<string> returnvec = {"a", "absolute", "acne"};
     ASSERT_EQ(returnvec, vec);
 }

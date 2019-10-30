@@ -6,6 +6,7 @@
 #ifndef DICTIONARY_TRIE_HPP
 #define DICTIONARY_TRIE_HPP
 
+#include <limits>  // numeric_limits<type>::max()
 #include <queue>
 #include <string>
 #include <unordered_map>
@@ -13,6 +14,21 @@
 #include <vector>
 
 using namespace std;
+
+struct MyComparator {
+    bool operator()(pair<int, string> const& p1, pair<int, string> const& p2) {
+        if (p1.first != p2.first) {
+            return p1.first < p2.first;
+        } else {
+            p1.second < p2.second;
+        }
+    }
+};
+// typedef pair<int, string> my_pair;
+// typedef priority_queue<my_pair, vector<my_pair>, MyComparator> my_queue;
+typedef priority_queue<pair<int, string>, vector<pair<int, string> >,
+                       MyComparator>
+    my_queue;
 
 /* Use priority_queue to sort the word according to freq from top to low.
  * Priority_queue by default uses less<T> comparator, vector<T> container.*/
@@ -33,18 +49,7 @@ using namespace std;
 //         }
 //     }
 // };
-struct MyComparator {
-    bool operator()(my_pair const& p1, my_pair const& p2) {
-        if (p1.first!= p2.first) {
-            return p1.first< p2.first;
-        } else {
-            p1.second < p2.second;
-        }
-    }
-};
 
-typedef pair<int, string> my_pair;
-typedef priority_queue<my_pair, vector<my_pair>, MyComparator > my_queue;
 /**
  * The class for a dictionary ADT, implemented as either
  * a mulit-way trie or a ternary search tree.
@@ -75,7 +80,7 @@ class DictionaryTrie {
     /** Helper function for predictCompletions.
      *  Returns a priority queue of pairs of frequency and word.
      */
-    void collect(string s, my_queue& q, TrieNode* n);
+    void collect(string s, my_queue& q, TrieNode* n, string prefix);
 
     /** Helper function for predictUnderscores.
      *  Returns a priority queue of pairs of frequency and word.
