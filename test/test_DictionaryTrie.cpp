@@ -39,9 +39,9 @@ TEST(DictTrieTests, PREDICT_COMPLETIONS_TEST) {
     ASSERT_TRUE(dict.insert("apple", 3));
     ASSERT_FALSE(dict.find("truth"));
     ASSERT_TRUE(dict.insert("truth", 5));
-    vector<string> vec1 = {"apple", "app"};
+    vector<string> vec = {"apple", "app"};
     vector<string> returnVec = dict.predictCompletions("ap", 10);
-    ASSERT_EQ(returnVec, vec1);
+    ASSERT_EQ(returnVec, vec);
 }
 
 TEST(DictTrieTests, MORE_TEST) {

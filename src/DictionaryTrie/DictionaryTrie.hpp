@@ -64,6 +64,10 @@ class DictionaryTrie {
         Frequency 0 means it is not word node, vice versa. */
         unsigned int frequency;
 
+        /* maxBelow is maximum frequency below node (current node inclusive)
+         */
+        unsigned int maxBelow;
+
         unordered_map<char, TrieNode*> map;
         /** Initializes a new TrieNode. */
         TrieNode() : frequency(0), map() {}
@@ -72,8 +76,11 @@ class DictionaryTrie {
             map[c] = new TrieNode();
         }
     };
-
     TrieNode* root;
+
+    /** Helper function to update the maxBelow of each TrieNode along the path
+     * from the root to the current node.*/
+    void updateMax(string word, unsigned int freq);
 
     /** Helper function for predictCompletions.
      *  Returns a priority queue of pairs of frequency and word.

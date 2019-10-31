@@ -43,7 +43,18 @@ bool DictionaryTrie::insert(string word, unsigned int freq) {
         return false;
     } else {
         curr->frequency = freq;
+        updateMax(word, freq);
         return true;
+    }
+}
+
+void DictionaryTrie::updateMax(string word, unsigned int freq) {
+    TrieNode* curr = root;
+    for (int i = 0; i < word.length(); i++) {
+        if (curr->maxBelow < freq) {
+            curr->maxBelow = freq;
+        }
+        curr = curr->map[word[i]];
     }
 }
 
@@ -108,6 +119,9 @@ void DictionaryTrie::collect(string s, my_min_queue& q, TrieNode* node,
                 q.push(make_pair(node->frequency, s));
             }
         }
+    }
+    if (q.size() == num && node->maxBelow < q.top().first) {
+        return;  // only prune when queue is full
     }
     for (pair<char, TrieNode*> element : node->map) {
         s.push_back(element.first);
